@@ -1,75 +1,106 @@
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import css from "../ContactForm/ContactForm.module.css";
-import PropTypes from 'prop-types'
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
+import { useDispatch, useSelector } from 'react-redux';
 
-const ContactForm = ({handleAddContact}) => {
-  const initialValues = {
-    name: "",
-    number: "",
-  };
+import styles from './ContactForm.module.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import { selectContacts } from '../../redux/contacts/selectors';
+import { addContact } from '../../redux/contacts/operations';
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(3, "Name must be at least 3 characters")
-      .max(50, "Name must be at most 50 characters")
-      .required("Name is required"),
-    number: Yup.string()
-      .min(3, "Number must be at least 3 characters")
-      .max(50, "Number must be at most 50 characters")
-      .required("Number is required"),
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      number: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .min(3, 'Must be at least 3 characters')
+        .max(50, 'Must be 50 characters or less')
+        .required('Required'),
+      number: Yup.string()
+        .matches(/^\d{3}-\d{2}-\d{2}$/, 'Number must be in format 123-45-67')
+        .required('Required'),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      const newContact = {
+        name: values.name,
+        number: values.number,
+      };
+      if (
+        contacts.some(
+          contact =>
+            contact.name.toLowerCase() === newContact.name.toLowerCase()
+        )
+      ) {
+        iziToast.error({
+          title: 'Error',
+          message: `${newContact.name} is already in contacts.`,
+          position: 'topCenter',
+          timeout: 5000,
+          backgroundColor: '#F44336',
+          titleColor: '#FFFFFF',
+          messageColor: '#FFFFFF',
+          titleSize: '24px',
+          messageSize: '22px',
+          class: styles.customToast,
+        });
+        return;
+      }
+      dispatch(addContact(newContact));
+      resetForm();
+    },
   });
-    
-
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleAddContact}
-    >
-        <Form className={css["form"]}>
-          <div className={css["input-box"]}>
-            <div className={css["input-element"]}>
-                <label className={css["label"]}>Name</label>
-                      
-                <Field
-                className={css["input"]}
-                type="text"
-                name="name"
-                />
-        </div>
-                  
-            <div className={css["input-element"]}>
-                      
-                <label className={css["label"]}>
-                Phone number
-                </label>
-                      
-                <Field
-                className={css["input"]}
-                type="text"
-                name="number"
-                />
-              </div>
-                  
-            </div>
+    <form className={styles.containerForm} onSubmit={formik.handleSubmit}>
+      <div className={styles.inputCont}>
+        <label className={styles.labelForm} htmlFor="name">
+          Name
+        </label>
+        <input
+          className={styles.inputForm}
+          id="name"
+          name="name"
+          type="text"
+          autoComplete="name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+        />
+      </div>
+      {formik.touched.name && formik.errors.name ? (
+        <div className={styles.errorMessage}>{formik.errors.name}</div>
+      ) : null}
+      <div className={styles.inputCont}>
+        <label className={styles.labelForm} htmlFor="number">
+          Number
+        </label>
+        <input
+          className={styles.inputForm}
+          id="number"
+          name="number"
+          type="text"
+          autoComplete="number"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.number}
+        />
+      </div>
+      {formik.touched.number && formik.errors.number ? (
+        <div className={styles.errorMessage}>{formik.errors.number}</div>
+      ) : null}
 
-          <div>
-            <button type="submit">
-              Add Contact
-            </button>
-          </div>
-        </Form>
-    </Formik>
+      <button className={styles.buttonForm} type="submit">
+        Add Contact
+      </button>
+    </form>
   );
 };
-
-ContactForm.propTypes = {
-    handleAddContact: PropTypes.func.isRequired,
-}
-
-
 
 export default ContactForm;

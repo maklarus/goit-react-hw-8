@@ -1,34 +1,54 @@
-.contact-item {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 15px;
-
+.containerContacts {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 10px;
 }
 
-.contact-box {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
+.containerContact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid blue;
+  border-radius: 8px;
+  width: 280px;
 }
 
-.contact-name {
-    font-size: 20px;
-    font-weight: 800;
+.icon {
+  margin-right: 10px;
+  color: blue;
 }
 
-.contact-number {
-    font-size: 20px;
-    font-weight: 400;
+.dataContact {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin: 0;
+  font-size: 20px;
+  padding: 5px;
 }
-
-.button-delete {
-    border: 1px solid black;
-    background-color: rgb(235, 131, 131);
-    margin-left: 20px;
-    width: 80px;
-    height: 40px;
-    padding: 10px;
-    margin-top: 10px;
+.contactName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+}
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+}
+.deleteBtn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.deleteBtn:hover {
+  background-color: #5e0404;
+  color: white;
 }

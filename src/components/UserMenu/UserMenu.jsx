@@ -1,34 +1,20 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { selectUser } from "../../redux/auth/selectors";
-import { logout } from "../../redux/auth/operations";
-import { useEffect, useState } from 'react';
-import {useNavigate} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../redux/auth/selectors';
+import { logOut } from '../../redux/auth/operations';
+import style from './UserMenu.module.css';
 
 const UserMenu = () => {
-  const { name } = useSelector(selectUser);
-  const [redirect, setRedirect] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const user = useSelector(selectUser);
 
-    const handleLogOut = () => {
-      dispatch(logout());
-  };
-
-useEffect(() => {
-  if (redirect) {
-    navigate("/login");
-    setRedirect(true)
-  }
-}, [redirect, navigate]);
-
-      
   return (
-    <div>
-      <p>Welcome, {name} </p>
-      <button onClick={handleLogOut}>LogOut</button>
+    <div className={style.welcomeNav}>
+      <p className={style.welcome}>Welcome, {user.name}</p>
+      <button onClick={() => dispatch(logOut())} className={style.btnLogout}>
+        Logout
+      </button>
     </div>
   );
 };
-
 
 export default UserMenu;

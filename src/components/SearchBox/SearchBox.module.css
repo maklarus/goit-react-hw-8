@@ -1,7 +1,17 @@
-.search-input {
-    border: 1px solid rgb(99, 81, 81);
-    border-radius: 20px;
-    width: 300px;
-    height: 30px;
-    text-align: center;
+.containerSearchForm {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.labelSearchForm {
+  font-size: 24px;
+  color: white;
+}
+.inputSearchForm {
+  font-size: 20px;
+  color: white;
+  height: 40px;
+  width: 360px;
+  border-radius: 8px;
+  border: 1px solid blue;
 }
